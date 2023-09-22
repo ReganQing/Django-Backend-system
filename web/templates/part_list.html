@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+        <!-- 按钮 -->
+    <div class="row mb-1" style="margin-bottom: 20px">
+        <div class="col-md-6">
+            <a type="button" class="btn btn-success" href="/part/add/">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                添加零件
+            </a>
+        </div>
+        <div class="col-md-6">
+            {#      bootstrap5 样式      #}
+            <form class="d-flex justify-content-end" role="search" method="get">
+                <input class="form-control me-2 w-auto" type="search" placeholder="零件名搜索"
+                       aria-label="Search"
+                       name="q" value="{{ search_data }}">
+                <button class="btn btn-outline-success" type="submit">搜索</button>
+            </form>
+        </div>
+    </div>
+    <!-- 面板 -->
+    <div class="card">
+        <div class="card-body table-responsive" style="padding: 1vw 1vw 0;">
+            <!-- Default panel contents -->
+            <h4 class="card-title">
+                零件列表
+            </h4>
+
+            <!-- Table -->
+            <table class="table table-hover">
+                <thead>
+                <tr class="table-primary">
+                    <th scope="col">ID</th>
+                    <th scope="col">零件名称</th>
+                    <th scope="col">计量单位</th>
+                    <th scope="col">库存量</th>
+                    <th scope="col">单价</th>
+                    <th scope="col">仓库存储位置</th>
+                    <th scope="col">附加描述</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in query_set %}
+                    <tr>
+                        <th scope="row">{{ item.pid }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.unit }}</td>
+                        <td>{{ item.amount }}</td>
+                        <td>{{ item.price }}元</td>
+                        <td>{{ item.store }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs" href="/part/{{ item.pid }}/edit/">编辑</a>
+
+                            <a type="button" class="btn btn-danger btn-xs" href="/part/{{ item.pid }}/delete/">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <ul class="pagination">
+                {{ page_string }}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

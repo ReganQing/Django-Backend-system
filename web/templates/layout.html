@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>信息管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.css" rel="stylesheet">
+    <style>
+        {% block css %}
+
+        {% endblock %}
+
+        .navbar {
+            border-radius: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd; margin-bottom: 20px">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">山恩科技ERP系统</a>
+        <button class="navbar-toggler" type="button"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/chart/list/">数据统计</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/part/list/">零件管理</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        人力资源管理
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/depart/list/">部门管理</a></li>
+                        <li><a class="dropdown-item" href="/user/list/">员工管理</a></li>
+{#                        <li class="dropdown-item"><a href="/order/list/">工单管理</a></li>#}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/list/">管理员账户</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav dropdown-menu-end mb-2">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        {{ request.session.info.name }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">个人中心</a></li>
+                        <li><a class="dropdown-item" href="/logout/">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="min-height: calc(100vh - 70px)">
+    {% block content %}
+
+    {% endblock %}
+</div>
+<footer class="footer" style="background: #e3f2fd; height: 50px; display: flex; justify-content: center; align-items: center">
+    <div>
+        <span class="text-muted d-block text-center text-md-center d-md-inline-block">Copyright (c) 2023 By admin</span>
+    </div>
+</footer>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.js"></script>
+{% block js %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}}
+
+{% block  content %}
+    <div class="card">
+        <div class="card-body">
+        <h4 class="card-title">新建零件</h4>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form  %}
+                <div class=mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    <span style="color: red;">{{ field.errors.0 }}</span>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary" style="margin: 20px 0">提 交</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+

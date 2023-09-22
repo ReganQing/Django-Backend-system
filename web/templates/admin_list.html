@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- 按钮 -->
+    <div class="row mb-1">
+        <div class="col-md-6">
+            <a type="button" class="btn btn-success" href="/admin/add/">添加管理员</a>
+        </div>
+        <div class="col-md-6">
+            {#      bootstrap5 样式      #}
+            <form class="d-flex justify-content-end" role="search" method="get">
+                <input class="form-control me-2 w-auto" type="search" placeholder="关键字搜索"
+                       aria-label="Search"
+                       name="q" value="{{ search_data }}">
+                <button class="btn btn-outline-success" type="submit">搜索</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 面板 -->
+    <div class="card">
+        <div class="card-body table-responsive" style="padding: 1vw 1vw 0;">
+            <h5 class="card-title">管理员列表</h5>
+            <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">用户名</th>
+                <th scope="col">密码</th>
+                <th scope="col">重置密码</th>
+                <th scope="col">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in queryset %}
+                <tr>
+                    <th scope="row">{{ item.id }}</th>
+                    <td>{{ item.user }}</td>
+                    <td>******</td>
+                    <td><a href="/admin/{{ item.id }}/reset/">重置密码</a></td>
+                    <td>
+                        <a type="button" class="btn btn-primary btn-sm" href="/admin/{{ item.id }}/edit/">编辑</a>
+
+                        <a type="button" class="btn btn-danger btn-sm"
+                           href="/admin/{{ item.id }}/del/">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="input-group">
+            <ul class="pagination justify-content-center">
+                {{ page_string }}
+            </ul>
+        </div>
+    </div>
+    </div>
+{% endblock %}

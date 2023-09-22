@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <!-- 按钮 -->
+    <div style="margin-bottom: 15px">
+        <a type="button" class="btn btn-success" href="/user/model/form/add/">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建用户
+        </a>
+    </div>
+    <!-- 面板 -->
+    <div class="card">
+        <div class="card-body table-responsive" style="padding-bottom: 0">
+            <!-- Default panel contents -->
+            <h4 class="card-title">用户列表</h4>
+            <!-- Table -->
+            <table class="table card-table table-hover table-vcenter text-nowrap text-center datatable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>年龄</th>
+                    <th>入职时间</th>
+                    <th>性别</th>
+                    <th>所属部门</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in query_set %}
+                    <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.create_time|date:'Y-m-d' }}</td>
+                        <!-- Django3取时间的格式item.create_time|date:'Y-m-d H:m:s' -->
+                        <td>{{ item.get_gender_display }}</td>  <!-- 直接获取元组里的数据-->
+                        <td>{{ item.depart.department_name }}</td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-md" href="/user/{{ item.id }}/edit/">编辑</a>
+
+                            <a type="button" class="btn btn-danger btn-md" href="/user/{{ item.id }}/del/"
+                               >删除</a>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <ul class="pagination">
+                {{ page_string }}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

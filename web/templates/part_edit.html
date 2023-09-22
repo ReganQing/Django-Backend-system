@@ -1,0 +1,22 @@
+{% extends "layout.html" %}}
+
+{% block content %}
+    <div class="panel panel-default container">
+    <div class="panel-heading">编辑零件</div>
+    <div class="panel-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form  %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <span style="color: red;">{{ field.errors.0 }}</span>
+{#                <input type="text" class="form-control" placeholder="{{ field.label }}" name="{{ field.name}}">#}
+            </div>
+
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

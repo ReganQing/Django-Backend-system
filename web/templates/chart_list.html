@@ -1,0 +1,299 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 grid-margin">
+                <div class="card" style="margin: 1rem 0.5rem">
+                    <div class="card-body">
+                        <h5 class="card-title">销售额</h5>
+                        <div style="font-size: 3rem; color: #4b88a6; display: flex; justify-content: center">
+                            ￥
+                            <p class="card-text text-center" id="sale-profit">
+                                {{ total_profit }}</p>
+                            万
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div class="card" style="margin: 1rem 0.5rem">
+                    <div class="card-body">
+                        <h5 class="card-title">今年销售数量</h5>
+                        <p class="card-text text-center" id="products"
+                           style="font-size: 3rem; color: orange">{{ total_products }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-5">
+                <div class="card" style="margin: 1rem 0.5rem">
+                    <div class="card-body">
+                        <h5 class="card-title" style="margin-bottom: 1rem">客户市场细分销售额</h5>
+                        <div id="chartPie" style="min-height: 38rem"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-7">
+                <div class="card" style="margin: 1rem 0.5rem">
+                    <div class="card-body">
+                        <h5 class="card-title">销售额趋势变化</h5>
+                        <div id="chartBarOne" style="min-height: 38rem"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card" style="margin: 1rem 0.5rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">类别利润</h5>
+                        <div id="chartBarTwo" style="min-height: 38rem"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdn.bootcdn.net/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script type="text/javascript">
+        {#  利用D3实现数字丝滑过渡  #}
+        const profitDisplay = d3.select("#sale-profit");
+        const productsNumDisplay = d3.select("#products")
+
+        // 设置初始值
+        const initialValue = 0.00;
+        // 设置动画持续时间
+        const animationDuration = 1000;
+
+        /**
+         * 数字展示过渡动画函数，精度为小数点后两位，初始值为0.00
+         * @param element 展示的html标签
+         * @param targetValue 目标值
+         */
+        function updateNumberFloat(element, targetValue) {
+            // 使用D3的过渡方法，从当前值过渡到新值
+            element.transition()
+                .duration(animationDuration) // 过渡时间为1秒
+                .tween("text", function () {
+                    const interpolator = d3.interpolateNumber(initialValue, targetValue);
+                    return function (t) {
+                        // 更新div的文本内容为插值结果
+                        element.text(interpolator(t).toFixed(2));
+                    };
+                })
+        }
+
+        /**
+         * 整数展示过渡动画函数，初始值为0
+         * @param element 展示的html标签
+         * @param targetValue 目标值
+         */
+        function updateNumberInt(element, targetValue) {
+            // 使用D3的过渡方法，从当前值过渡到新值
+            element.transition()
+                .duration(animationDuration) // 过渡时间为1秒
+                .tween("text", function () {
+                    const interpolator = d3.interpolateNumber(0, targetValue);
+                    return function (t) {
+                        // 更新div的文本内容为插值结果
+                        element.text(Math.round(interpolator(t)));
+                    };
+                })
+        }
+
+        // 调用动画函数
+        updateNumberFloat(profitDisplay, {{ total_profit }});
+        updateNumberInt(productsNumDisplay, {{ total_products }})
+
+        {# 客户市场细分销售额 #}
+        let chartPieDom = document.getElementById('chartPie');
+        let chartPie = echarts.init(chartPieDom);
+        let optionOne;
+
+        optionOne = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            series: [
+                {
+                    name: '客户市场细分销售额',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 40,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {value: {{ company }}, name: '公司'},
+                        {value: {{ business }}, name: '小企业'},
+                        {value: {{ consumer }}, name: '消费者'},
+                    ]
+                }
+            ]
+        };
+
+        optionOne && chartPie.setOption(optionOne);
+
+        {# 销售趋势变化图 #}
+        let chartBarDomOne = document.getElementById('chartBarOne')
+        let chartBarOne = echarts.init(chartBarDomOne);
+
+        optionTwo = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data: ['销售额', '销售数量']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12'],
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '月度销售额',
+                    min: 0,
+                    max: 80,
+                    interval: 10,
+                    axisLabel: {
+                        formatter: '{value} 万元'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '月度销售数量',
+                    min: 0,
+                    max: 8000,
+                    interval: 1000,
+                    axisLabel: {
+                        formatter: '{value} 件'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '销售额',
+                    type: 'bar',
+                    tooltip: {
+                        valueFormatter: function (value) {
+                            return value + ' 万元';
+                        }
+                    },
+                    data: {{ month_profit }}
+                },
+                {
+                    name: '销售数量',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    tooltip: {
+                        valueFormatter: function (value) {
+                            return value + ' 件';
+                        }
+                    },
+                    data: {{ month_sale_num }}
+                }
+            ]
+        }
+        optionTwo && chartBarOne.setOption(optionTwo);
+
+        {#  产品类别利润  #}
+        let chartBarDomTwo = document.getElementById('chartBarTwo');
+        let chartBarTwo = echarts.init(chartBarDomTwo)
+
+        optionThree = {
+            title: {
+                text: '产品类别利润'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {},
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01]
+            },
+            yAxis: {
+                type: 'category',
+                data: ['机械臂', '螺丝', '滑动变阻器',
+                    '万向轮', '驱动电机', '轴承', '亚克力底盘']
+            },
+            series: [
+                {
+                    name: '2023',
+                    type: 'bar',
+                    tooltip: {
+                        valueFormatter: function (value) {
+                            return value + ' 万元';
+                        }
+                    },
+                    data: {{ category_profit }}
+                },
+            ]
+        };
+        optionThree && chartBarTwo.setOption(optionThree);
+    </script>
+{% endblock %}

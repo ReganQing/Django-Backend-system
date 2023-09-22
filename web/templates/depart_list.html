@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+
+
+{% block content %}
+    <!-- 按钮 -->
+    <div style="margin-bottom: 15px">
+        <a type="button" class="btn btn-success" href="/depart/add/">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            新建部门
+        </a>
+    </div>
+    <!-- 面板 -->
+    <div class="card">
+        <div class="card-body table-responsive" style="padding-bottom: 0">
+            <!-- Default panel contents -->
+            <h4 class="card-title">部门列表</h4>
+            <!-- Table -->
+            <table class="table table-hover card-table table-vcenter text-nowrap datatable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>部门名称</th>
+                    <th>部门人数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in query_set %}
+                    <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.department_name }}</td>
+                        <td>{{ item.employees_num }}</td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-xs"
+                               href="/depart/{{ item.id }}/edit/">编辑</a>
+
+                            <a type="button" class="btn btn-danger btn-xs"
+                               href="/depart/{{ item.id }}/del/">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <ul class="pagination">
+                {{ page_string }}
+            </ul>
+        </div>
+
+
+    </div>
+
+
+{% endblock %}

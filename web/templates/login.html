@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("../static/img/fog.jpg");
+        }
+
+        .input_area {
+            width: 500px;
+            border: 1px solid #1b6d85;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px #8c8c8c;
+
+            padding: 20px 40px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+        }
+
+        .input_area h1 {
+            margin-top: 10px;
+
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="input_area">
+    <h1>山恩工业ERP系统登录</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            {{ form.user }}
+            <label>用户名</label>
+            <span style="color: red">{{ form.user.errors.0 }}</span>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.password }}
+            <label>密码</label>
+            <span style="color: red">{{ form.password.errors.0 }}</span>
+        </div>
+        {#    验证码    #}
+        <div class="form-floating mb-3">
+
+            <div class="row g-3">
+                <div class="col-md-7">
+                    {{ form.verify_code }}
+                    <span style="color: red">{{ form.verify_code.errors.0 }}</span>
+                </div>
+                <div class="col-md-5">
+                    <label><input type="image" src="/image/code/" id="image_code" alt="verify-code"></label>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid mt-1 col-3 mx-auto">
+            <button type="submit" class="btn btn-primary btn-xs">登 录</button>
+        </div>
+
+    </form>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
